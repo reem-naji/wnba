@@ -1,5 +1,11 @@
 venv
 catboost_info/
+models/s
 *.bin
 *.pkl
 *.json
+*.cbm
+__pycache__/
+*.py[cod]
+*$py.class
+.env
