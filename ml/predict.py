@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import catboost, joblib
-from features import build_features, FEATURES
+from features import build_features, FEATURES, STATS
 from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -25,7 +25,10 @@ def predict_mvp_race(current_season_raw: pd.DataFrame) -> pd.DataFrame:
     ], axis=0)
 
     df['Predicted_Share'] = preds
-    return (df[['Player','Team', 'Pos','Season', 'Predicted_Share'] + FEATURES]
+    return (df[['Player','Team', 'Pos','Season', 'Predicted_Share'] + STATS]
               .sort_values('Predicted_Share', ascending=False)
               .reset_index(drop=True))
+
+predictions = predict_mvp_race(data)
+predictions.to_csv(CURRENT_DIR / 'data' /'predictions.csv')
 
