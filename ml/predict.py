@@ -25,6 +25,7 @@ def predict_mvp_race(current_season_raw: pd.DataFrame) -> pd.DataFrame:
     ], axis=0)
 
     df['Predicted_Share'] = preds
-    return (df[['Player', 'Season', 'Predicted_Share'] + FEATURES]
+    return (df[['Player','Team', 'Pos','Season', 'Predicted_Share'] + FEATURES]
               .sort_values('Predicted_Share', ascending=False)
               .reset_index(drop=True))
+

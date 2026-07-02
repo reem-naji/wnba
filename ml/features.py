@@ -13,11 +13,11 @@ def build_features(raw_df:pd.DataFrame, objective="train") -> pd.DataFrame:
     raw_df['ast_per_game'] = raw_df['AST'] / raw_df['G']
     raw_df['trb_per_game'] = raw_df['TRB'] / raw_df['G']
     raw_df['blk_per_game'] = raw_df['BLK'] / raw_df['G']
-    
+
     if objective == "train":
-        df = raw_df[['Season', 'Player', 'award_share']].copy()
+        df = raw_df[['Season', 'Player', 'Team', 'Pos', 'award_share']].copy()
     elif objective == "predict":
-        df = raw_df[['Season', 'Player']].copy()
+        df = raw_df[['Season', 'Player', 'Team', 'Pos']].copy()
 
     for col in STATS:
         df[f'{col}_z'] = raw_df.groupby('Season')[col].transform(
