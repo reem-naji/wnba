@@ -121,11 +121,11 @@ with col4:
             coloraxis_colorbar=dict(
                 orientation="h",    # Make colorbar horizontal
                 yanchor="top",
-                y=-0.25,            # Push it below the x-axis
+                y=-0.25,            
                 xanchor="center",
                 x=0.5,
-                thickness=10,       # Make the bar slimmer
-                title=""            # Hide the 'Predicted_Share' title to save space
+                thickness=10,       
+                title="Predicted Share"            
             )
         )
     st.plotly_chart(fig, use_container_width=True)
