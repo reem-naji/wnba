@@ -3,8 +3,8 @@ base = "dark"
 
 # General color setup
 textColor = "#e2e8f0"
-primaryColor = "#615fff"
-backgroundColor = "#1d293d"
+primaryColor = "#d6d6e6"
+backgroundColor = "#151e2d"
 secondaryBackgroundColor = "#0f172b"
 
 # Widgets
