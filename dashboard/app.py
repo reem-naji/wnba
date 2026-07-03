@@ -33,7 +33,7 @@ leader_name = data.iloc[0]['Player']
 # --- ROW 1: MVP Frontrunner & TOP 5 MVP LEADERS  ---
 col1, col2 = st.columns([1, 2])
 
-st.subheader("Leading the race with the highest model-predicted award share this season")
+
 with col1:
     
     st.subheader("🏆 MVP Frontrunner")
@@ -121,7 +121,19 @@ with col4:
         color_continuous_scale='viridis',
         labels={'pts_per_game': 'Points Per Game',selected_feat: selected_feat_label}
     )
-    fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), height=280)
+    fig.update_layout(
+            margin=dict(l=10, r=10, t=25, b=10), 
+            height=320, # Slightly taller to make room for the bottom colorbar
+            coloraxis_colorbar=dict(
+                orientation="h",    # Make colorbar horizontal
+                yanchor="top",
+                y=-0.25,            # Push it below the x-axis
+                xanchor="center",
+                x=0.5,
+                thickness=10,       # Make the bar slimmer
+                title=""            # Hide the 'Predicted_Share' title to save space
+            )
+        )
     st.plotly_chart(fig, use_container_width=True)
     
 st.markdown("---")
@@ -187,6 +199,18 @@ with st.container():
     
     # Reduce opacity slightly so overlaid histograms don't completely hide each other
     fig_detailed_hist.update_traces(opacity=0.75)
-    fig_detailed_hist.update_layout(bargap=0.05, height=400)
+    fig_detailed_hist.update_layout(
+        bargap=0.05, 
+        height=450, # Increased height slightly so the boxplot has room to breathe
+        margin=dict(l=10, r=10, t=30, b=10),
+        legend=dict(
+            orientation="h",      # Make legend horizontal
+            yanchor="top",
+            y=-0.15,              # Push legend below the x-axis
+            xanchor="center",
+            x=0.5,
+            title=None            # Hide the legend title to maximize width
+        )
+    )
 
     st.plotly_chart(fig_detailed_hist, use_container_width=True)
