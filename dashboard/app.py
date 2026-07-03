@@ -12,16 +12,20 @@ print(PROJECT_ROOT)
 @st.cache_data
 def load_data():
     data = pd.read_csv(PROJECT_ROOT / 'ml' / 'data'/ 'predictions.csv')
+    feature_importance = pd.read_csv(PROJECT_ROOT / 'ml' / 'data'/ 'feature_importance.csv')
     if 'Unnamed: 0' in data.columns:
         data.drop(columns=['Unnamed: 0'], inplace=True)
+
+    if 'Unnamed: 0' in feature_importance.columns:
+        feature_importance.drop(columns=['Unnamed: 0'], inplace=True)
     
     data['mvp_caliber'] = np.where(data['Predicted_Share'] >= 0.1 , 'yes', 'no')
-    return data
+    return data, feature_importance
 
 try:
-    data = load_data()
+    data, feature_importance = load_data()
 except FileNotFoundError:
-    st.error("Data file not found. Please ensure 'data/predictions.csv' exists.")
+    st.error("Data file not found. Please ensure 'data/predictions.csv' or 'data/feature_importance.csv' exist.")
     st.stop()
 
 st.title("2026 WNBA MVP Race Predictions & Analytics 🏀 ")
@@ -54,15 +58,15 @@ with col2:
     )
 
 features = [
-    ('USG%', 'Usage Percentage (USG%)'),
-    ('Predicted_Share', 'Predicted Share'),
-    ('WS', 'Win Shares (WS)'),
-    ('PER', 'Player Efficiency Rating (PER)'),
-    ('TS%', 'True Shooting % (TS%)'),
+    ('pts_per_game', 'Points per game'),
     ('ast_per_game', 'Assists Per Game'),
     ('trb_per_game', 'Total Rebounds Per Game'),
+    ('USG%', 'Usage Percentage (USG%)'),
+    ('PER', 'Player Efficiency Rating (PER)'),
     ('blk_per_game', 'Blocks Per Game'),
-    ('stl_per_game', 'Steals Per Game')
+    ('stl_per_game', 'Steals Per Game'),
+    ('TS%', 'True Shooting % (TS%)'),
+    ('Predicted_Share', 'Predicted Share'),
 ]
 
 # --- ROW 2: HEATMAP AND INTERACTIVE SCATTER PLOTS  ---
@@ -73,26 +77,16 @@ with col3:
 
     st.subheader("Which Stats Matter Most to the Model?")
     st.markdown("The statistics most closely linked to a high predicted award share")
-    
-    cols_to_correlate = data.columns[4:14]
-    corr_matrix = data[cols_to_correlate].corr(method='spearman')
-    
-    # 2. Extract correlation with Predicted_Share, remove self-correlation, and sort
-    corr_with_target = corr_matrix['Predicted_Share'].drop('Predicted_Share').sort_values(ascending=False)
-    
-    # 3. Convert the Series into a DataFrame for Plotly Express
-    corr_df = corr_with_target.reset_index()
-    corr_df.columns = ['Feature', 'Correlation']
-    
+
     # 4. Create the Interactive Plotly Bar Chart
     fig_corr_bar = px.bar(
-        corr_df,
-        x='Feature',
-        y='Correlation',
-        color='Correlation',              # This creates the continuous color gradient!
+        feature_importance,
+        x='feature',
+        y='mean_abs_shap',
+        color='mean_abs_shap',              # This creates the continuous color gradient!
         color_continuous_scale='viridis', # The colormap you requested
-        text_auto='.2f',                  # Puts the exact correlation value on top of each bar
-        labels={'Correlation': 'Spearman Correlation'}
+        text_auto='.5f',                  # Puts the exact correlation value on top of each bar
+        labels={'mean_abs_shap': 'Feature Importance (Shap)'}
     )
     
     # 5. Layout optimizations (mobile-friendly and clean)
@@ -115,11 +109,11 @@ with col4:
     selected_feat = [f[0] for f in features if f[1] == selected_feat_label][0]
 
     fig = px.scatter(
-        data, y=selected_feat, x='pts_per_game',
+        data, y=selected_feat, x='WS',
         color='Predicted_Share', hover_name='Player',
         hover_data=['Team', 'Pos', 'Predicted_Share'],
         color_continuous_scale='viridis',
-        labels={'pts_per_game': 'Points Per Game',selected_feat: selected_feat_label}
+        labels={'WS': 'Win Shares (WS)',selected_feat: selected_feat_label}
     )
     fig.update_layout(
             margin=dict(l=10, r=10, t=25, b=10), 
@@ -146,7 +140,7 @@ with st.container():
 
     # 1. Feature selection (Keep at the top)
     features_ = features
-    features_.insert(0,('pts_per_game', 'Points per Game'))
+    features_.insert(0,('WS', 'Win Shares (WS)'))
     numeric_columns = [f[1] for f in features_]
     selected_feat_label = st.selectbox("Select a metric to explore:", options=numeric_columns, index=0)
     selected_feat = [f[0] for f in features_ if f[1] == selected_feat_label][0]
