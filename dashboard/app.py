@@ -71,7 +71,7 @@ features = [
 
 # --- ROW 2: HEATMAP AND INTERACTIVE SCATTER PLOTS  ---
 st.markdown("---")
-col3, col4 = st.columns([1,1])
+col3, col4 = st.columns([1,1], gap="xxlarge")
 
 with col3:
 
@@ -84,8 +84,7 @@ with col3:
         x='feature',
         y='mean_abs_shap',
         color='mean_abs_shap',              # This creates the continuous color gradient!
-        color_continuous_scale='viridis', # The colormap you requested
-        text_auto='.5f',                  # Puts the exact correlation value on top of each bar
+        color_continuous_scale='viridis', 
         labels={'mean_abs_shap': 'Feature Importance (Shap)'}
     )
     
@@ -120,12 +119,15 @@ with col4:
             height=320, # Slightly taller to make room for the bottom colorbar
             coloraxis_colorbar=dict(
                 orientation="h",    # Make colorbar horizontal
-                yanchor="top",
-                y=-0.25,            
+                yanchor="bottom",
+                y=1.25,            
                 xanchor="center",
                 x=0.5,
-                thickness=10,       
-                title="Predicted Share"            
+                thickness=5,       
+                title=dict(
+                text="Predicted Share",
+                side="top",
+            )          
             )
         )
     st.plotly_chart(fig, use_container_width=True)
