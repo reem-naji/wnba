@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.git/
+.gitignore
+ml/notebooks/
+*.ipynb
+.venv/
+venv/
+.env
+*.md
+.pytest_cache/
