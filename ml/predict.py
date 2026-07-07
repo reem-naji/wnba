@@ -2,10 +2,13 @@
 import pandas as pd
 import numpy as np
 import catboost, joblib
-from features import build_features, FEATURES, STATS
 from pathlib import Path
+import sys
 
 CURRENT_DIR = Path(__file__).resolve().parent
+sys.path.append(str(CURRENT_DIR))
+
+from features import build_features, FEATURES, STATS
 
 catb = catboost.CatBoostRegressor()
 catb.load_model(CURRENT_DIR / 'models'/ 'catb.cbm')
