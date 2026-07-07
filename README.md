@@ -138,7 +138,3 @@ This project currently runs its scraping, prediction, and explainability steps m
 - [ ] Deploy `api/main.py` as a public REST endpoint serving live predictions
 - [ ] Add unit tests and CI (GitHub Actions)
 - [ ] Track training experiments with MLflow
-
-```
-
-```
