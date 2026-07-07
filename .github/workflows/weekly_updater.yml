@@ -1,0 +1,42 @@
+name: Weekly WNBA Predictions Update
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: "0 10 * * 1"
+  workflow_dispatch:
+
+jobs:
+  update-data-and-predict:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Data Ingestion
+        run: python ingestion/loaders/load_data.py
+
+      - name: Run ML Predictions
+        run: python ml/predict.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ml/data/player_data_2026.csv ml/data/predictions.csv
+          # The '|| echo' prevents the workflow from failing if there are no new changes to commit
+          git commit -m "Automated weekly update of WNBA data and MVP predictions" || echo "No changes to commit"
+          git push
