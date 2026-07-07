@@ -32,6 +32,15 @@ jobs:
       - name: Run Data Ingestion
         run: python ingestion/loaders/load_data.py
 
+      - name: Debug File Structure
+        run: |
+          echo "Checking root directory:"
+          ls -la
+          echo "Checking ml directory:"
+          ls -la ml/
+          echo "Checking models directory:"
+          ls -la ml/models/ || echo "models folder does not exist!"
+
       - name: Run ML Predictions
         run: python ml/predict.py
 
