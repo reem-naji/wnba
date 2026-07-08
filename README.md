@@ -1,5 +1,7 @@
 # 🏀 2026 WNBA MVP Race Predictor
 
+![Weekly WNBA Predictions Update](https://github.com/reem-naji/wnba/actions/workflows/weekly_updater.yml/badge.svg)
+
 An end-to-end machine learning project that predicts the WNBA MVP race using a tuned gradient boosting ensemble, trained on 29 seasons of historical data and deployed as a live, interactive dashboard.
 
 **Live Dashboard:** [wnba-project.streamlit.app](https://wnba-project.streamlit.app/)
@@ -19,10 +21,12 @@ As a WNBA fan, I noticed there wasn't a rigorous, data-driven way to track the M
 | Metric                              | Value                       |
 | ----------------------------------- | --------------------------- |
 | R² (walk-forward CV, 2013–2025)     | ≈ 0.78                      |
-| Hit@3 (true MVP in top-2 predicted) | 100%                        |
+| Hit@2 (true MVP in top-2 predicted) | 100%                        |
 | Kaggle dataset usability score      | 10.0                        |
 | Training window                     | 1997–2025 (29 seasons)      |
 | Models ensembled                    | XGBoost, LightGBM, CatBoost |
+
+_Walk-forward metrics are evaluated across 13 held-out seasons (2013–2025), each trained only on prior seasons — see Methodology below._
 
 ---
 
@@ -50,7 +54,7 @@ Full modeling workflow, including tuning and validation results, is documented i
 
 ## Dashboard
 
-Built with Streamlit and deployed on Streamlit Community Cloud. The layout walks the viewer through: **who** the model predicts as MVP , **why** (feature importance) , **where** the frontrunner stands statistically among the league (interactive scatter plot) , **how large the gap is** between MVP-caliber players and the rest of the league (distribution/outlier analysis).
+Built with Streamlit and deployed on Streamlit Community Cloud. The layout walks the viewer through: **who** the model predicts as MVP -> **why** (feature importance) , **where** the frontrunner stands statistically among the league (interactive scatter plot) -> **how large the gap is** between MVP-caliber players and the rest of the league (distribution/outlier analysis).
 
 - MVP frontrunner card with predicted award share
 - Top 5 contenders point plot
@@ -65,8 +69,8 @@ Built with Streamlit and deployed on Streamlit Community Cloud. The layout walks
 ```
 wnba-predictor/
 ├── .github/
-│   └── workdlows/
-│   │   └── weekly_updater.yml                      # WIP: GitHub Actions automated weekly pipeline execution
+│   └── workflows/
+│   │   └── weekly_updater.yml                      # GitHub Actions automated weekly pipeline execution
 ├── airflow/
 │   └── dags/
 │   │   └── weekly_update_dag.py            # DAG to orchestrate weekly scraping and prediction updates
@@ -87,8 +91,6 @@ wnba-predictor/
 │   ├── train.py
 │   └── predict.py
 │   └── explain.py                   # ensemble SHAP feature importance
-├── api/
-│   └── main.py                  # scaffolded for future API deployment
 ├── dashboard/
 │   ├── .streamlit/config.toml
 │   └── app.py
@@ -105,7 +107,6 @@ wnba-predictor/
 **Modeling:** Python, XGBoost, LightGBM, CatBoost, Optuna, SHAP, scikit-learn
 **Data:** BeautifulSoup, Pandas
 **Dashboard:** Streamlit
-**Planned:** FastAPI
 
 ---
 
@@ -133,8 +134,8 @@ You can access the Airflow UI at http://localhost:8080
 
 This project currently runs its scraping, prediction, and explainability steps manually. Planned next steps:
 
-- [x] Automate weekly data refresh (Airflow DAG implemented and active; GitHub Actions workflow in progress)
+- [x] Automate weekly data refresh (using Airflow DAG and GitHub Actions workflow)
 - [x] Implement the scaffolded Airflow DAGs for production orchestration
-- [ ] Deploy `api/main.py` as a public REST endpoint serving live predictions
+- [x] Containerize the dashboard using docker
 - [ ] Add unit tests and CI (GitHub Actions)
 - [ ] Track training experiments with MLflow

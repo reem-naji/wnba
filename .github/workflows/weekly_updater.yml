@@ -32,17 +32,6 @@ jobs:
       - name: Run Data Ingestion
         run: python ingestion/loaders/load_data.py
 
-      - name: Debug File Structure
-        run: |
-          echo "Current commit:"
-          git rev-parse HEAD
-          echo "Branch/ref checked out:"
-          git branch -a
-          echo "Searching entire workspace for model files:"
-          find $GITHUB_WORKSPACE -iname "*.cbm" -o -iname "*.pkl"
-          echo "Full ml/ tree:"
-          find $GITHUB_WORKSPACE/ml -maxdepth 3
-
       - name: Run ML Predictions
         run: python ml/predict.py
 
