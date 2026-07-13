@@ -119,7 +119,7 @@ col4, col5 = st.columns([1,1], gap="xxlarge")
 with col4:
 
     st.subheader(f"Where {leader_name} Stands Among the League")
-    st.markdown("Comparing players by points per game and usage rate — hover for player details, or switch the Y-axis to explore other stats")
+    st.markdown("Comparing players by win shares and points per game — hover for player details, or switch the Y-axis to explore other stats")
 
     numeric_columns = [f[1] for f in features]
     selected_feat_label = st.selectbox("Select a metric to explore:", options=numeric_columns, index=0, key='metric_filter')
@@ -149,10 +149,11 @@ with col4:
             )
         )
     st.plotly_chart(fig, use_container_width=True)
-    
+
+number_of_mvp_calibers = len(data['mvp_caliber'] == 'yes')
 with col5:
     st.subheader("MVP-Caliber Players vs. the Rest of the League")
-    st.markdown(f"How the top 9 MVP-caliber players — and {leader_name} in particular — separate from the rest of the league")
+    st.markdown(f"How the top {number_of_mvp_calibers} MVP-caliber players — and {leader_name} in particular — separate from the rest of the league")
 
     features_ = features
     features_.insert(0,('WS', 'Win Shares (WS)'))
