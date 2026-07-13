@@ -62,6 +62,7 @@ Built with Streamlit and deployed on Streamlit Community Cloud. The layout walks
 - Interactive scatter plot (player stats, hover for details, adjustable axes)
 - Distribution analysis (histogram + boxplot) comparing MVP-caliber players vs. the rest of the league
 
+<img width="800" height="343" alt="ScreenRecording2026-07-08225113-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/4231ddb1-5c89-4722-a984-1e3a94547091" />
 ---
 
 ## Project Structure
