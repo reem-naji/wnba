@@ -3,15 +3,16 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 from pathlib import Path
+import os
 
 st.set_page_config(page_title="2026 WNBA MVP Race Predictions", layout="wide")
 
 # Load Data with caching for better performance
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-print(PROJECT_ROOT)
+PREDICTIONS_PATH = PROJECT_ROOT / 'ml' / 'data'/ 'predictions.csv'
 @st.cache_data
-def load_data():
-    data = pd.read_csv(PROJECT_ROOT / 'ml' / 'data'/ 'predictions.csv')
+def load_data(mtime):
+    data = pd.read_csv(PREDICTIONS_PATH)
     feature_importance = pd.read_csv(PROJECT_ROOT / 'ml' / 'data'/ 'feature_importance.csv')
     if 'Unnamed: 0' in data.columns:
         data.drop(columns=['Unnamed: 0'], inplace=True)
@@ -23,7 +24,8 @@ def load_data():
     return data, feature_importance
 
 try:
-    data, feature_importance = load_data()
+    mtime = os.path.getmtime(PREDICTIONS_PATH)
+    data, feature_importance = load_data(mtime)
 except FileNotFoundError:
     st.error("Data file not found. Please ensure 'data/predictions.csv' or 'data/feature_importance.csv' exist.")
     st.stop()
