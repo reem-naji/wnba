@@ -152,10 +152,10 @@ with col4:
         )
     st.plotly_chart(fig, use_container_width=True)
 
-number_of_mvp_calibers = len(data['mvp_caliber'] == 'yes')
+number_of_mvp_calibers = len(data[data['mvp_caliber'] == 'yes'])
 with col5:
     st.subheader("MVP-Caliber Players vs. the Rest of the League")
-    st.markdown(f"How the top {number_of_mvp_calibers} MVP-caliber players — and {leader_name} in particular — separate from the rest of the league")
+    st.markdown(f"From a total of {len(data)} players, how does the top {number_of_mvp_calibers} MVP-caliber players — and {leader_name} in particular — separate from the rest of the league")
 
     features_ = features
     features_.insert(0,('WS', 'Win Shares (WS)'))
